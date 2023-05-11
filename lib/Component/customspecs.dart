@@ -10,31 +10,31 @@ class CustomSpecs extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: MediaQuery.of(context).size.height * 0.12,
-      width: MediaQuery.of(context).size.width * 0.36,
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20),
-          gradient: const LinearGradient(
-              tileMode: TileMode.mirror,
-              begin: Alignment.topLeft,
-              end: Alignment(0.8, 1),
-              colors: [Colors.blueGrey, Colors.white])),
-      child: Column(
-        children: [
-          SizedBox(
-            height: MediaQuery.of(context).size.height * 0.01,
-          ),
-          icon,
-          SizedBox(
-            height: MediaQuery.of(context).size.height * 0.01,
-          ),
-          Text(
-            text,
-            style: TextStyle(
-                fontSize: 18, fontWeight: FontWeight.bold, letterSpacing: 1.0),
-          )
-        ],
+    return Padding(
+      padding: EdgeInsets.only(bottom: MediaQuery.of(context).size.height * 0.02),
+      child: Container(
+        height: MediaQuery.of(context).size.height * 0.12,
+        width: MediaQuery.of(context).size.width * 0.36,
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(20),
+            color: Colors.indigo.shade400,
+        ),
+        child: Column(
+          children: [
+            SizedBox(
+              height: MediaQuery.of(context).size.height * 0.01,
+            ),
+            icon,
+            SizedBox(
+              height: MediaQuery.of(context).size.height * 0.01,
+            ),
+            Text(
+              text,
+              style: TextStyle(
+                  fontSize: 18, fontWeight: FontWeight.bold, letterSpacing: 1.0,color: Colors.white),
+            )
+          ],
+        ),
       ),
     );
   }

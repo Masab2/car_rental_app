@@ -1,4 +1,5 @@
 import 'package:car_rental_app/Component/Custombtn.dart';
+import 'package:car_rental_app/view/BookedCars/alluserbookedcars.dart';
 import 'package:car_rental_app/view/HomePage.dart';
 import 'package:car_rental_app/view/adminCarlist/CarListAdmin.dart';
 import 'package:flutter/material.dart';
@@ -61,7 +62,7 @@ class _AdminPanelState extends State<AdminPanel> {
               color: Color(0xff282F66),
             ),
             SizedBox(
-              height: 40,
+              height: 50,
             ),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 20),
@@ -77,6 +78,7 @@ class _AdminPanelState extends State<AdminPanel> {
               padding:
                   EdgeInsets.only(top: 40, left: 20, right: 20, bottom: 20),
               child: CustomBtn(
+                color: Colors.white70,
                 icon: Icon(
                   Icons.car_crash_outlined,
                   size: 40,
@@ -94,7 +96,7 @@ class _AdminPanelState extends State<AdminPanel> {
             Padding(
               padding: EdgeInsets.only(left: 20, right: 20, bottom: 20),
               child: CustomBtn(
-                color: Color(0xff282F66),
+                color: Colors.blueGrey.shade200,
                 icon: Icon(
                   Icons.car_repair,
                   size: 40,
@@ -112,12 +114,19 @@ class _AdminPanelState extends State<AdminPanel> {
             Padding(
               padding: EdgeInsets.only(left: 20, right: 20, bottom: 20),
               child: CustomBtn(
+                color: Colors.white70,
                 icon: Icon(
                   Icons.car_rental,
                   size: 40,
                 ),
                 title: 'Booked Cars',
-                ontap: () {},
+                ontap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => AllUserBookedCars(),
+                      ));
+                },
               ),
             ),
           ],

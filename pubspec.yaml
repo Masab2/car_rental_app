@@ -47,6 +47,7 @@ dependencies:
   flutter_slidable: ^3.0.0
   flutter_sms: ^2.3.3
   flutter_email_sender: ^5.2.0
+  mailer: ^6.0.1
 
 
 dev_dependencies:

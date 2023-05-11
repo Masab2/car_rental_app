@@ -1,4 +1,3 @@
-import 'package:car_rental_app/Component/ValidateBtn.dart';
 import 'package:car_rental_app/Component/customListtile.dart';
 import 'package:car_rental_app/Toast/CustomToast.dart';
 import 'package:car_rental_app/view/AdminPanelAuth.dart';
@@ -24,7 +23,6 @@ class _HomePageState extends State<HomePage> {
   String search = '';
   String carname = '';
   final GlobalKey<ScaffoldState> _globalKey = GlobalKey<ScaffoldState>();
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -362,8 +360,8 @@ class _HomePageState extends State<HomePage> {
                               child: DetailContainer(
                                 image: snapshot.data!.docs[index]['image']
                                     .toString(),
-                                text: '${snapshot.data!.docs[index]['price']
-                                    .toString()}/day',
+                                text:
+                                    '${snapshot.data!.docs[index]['price'].toString()}/day',
                                 title: snapshot.data!.docs[index]['make']
                                     .toString(),
                                 subtitle: snapshot.data!.docs[index]['category']

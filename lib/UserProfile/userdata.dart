@@ -250,7 +250,8 @@ class _userdataState extends State<userdata> {
                 title: 'Create Profile',
                 ontap: () {
                   if (_formfield.currentState!.validate()) {
-                    firestore.collection('users').add({
+                    String id = DateTime.now().millisecondsSinceEpoch.toString();
+                    firestore.collection('users').doc(id).set({
                       'username': usernamecontroller.text,
                       'email': emailcontroller.text,
                       'address': addresscontroller.text,

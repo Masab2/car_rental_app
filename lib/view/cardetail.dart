@@ -1,12 +1,16 @@
+import 'package:car_rental_app/view/BookedCars/bookedcarUser.dart';
+import 'package:car_rental_app/view/BookedCars/bookingdetailsuser.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:cupertino_icons/cupertino_icons.dart';
 import 'package:flutter_sms/flutter_sms.dart';
+import 'package:mailer/mailer.dart';
+import 'package:mailer/smtp_server.dart';
 import '../../Component/customspecs.dart';
 import '../Toast/CustomToast.dart';
 import 'package:flutter_email_sender/flutter_email_sender.dart';
+
 class CarDetail extends StatefulWidget {
   final DocumentSnapshot documentSnapshot;
 
@@ -17,20 +21,6 @@ class CarDetail extends StatefulWidget {
 
   @override
   State<CarDetail> createState() => _CarDetailState();
-}
-
-void message(String message, List<String> recipients) async {
-  String msg = await sendSMS(message: message, recipients: recipients)
-      .catchError((onError) {
-    debugPrint(onError);
-  });
-}
-void Emailsender(String emailbody,String emailsubject, List<String> recipentemail) async{
-  var email = Email(
-    body: emailbody,
-    subject: emailsubject,
-    recipients: recipentemail,
-  );
 }
 
 class _CarDetailState extends State<CarDetail> {
@@ -109,6 +99,7 @@ class _CarDetailState extends State<CarDetail> {
                     CustomSpecs(
                       icon: const Icon(
                         Icons.local_gas_station,
+                        color: Colors.white,
                         size: 30,
                       ),
                       text: widget.documentSnapshot['fuel'].toString(),
@@ -119,6 +110,7 @@ class _CarDetailState extends State<CarDetail> {
                     CustomSpecs(
                       icon: const Icon(
                         CupertinoIcons.car_detailed,
+                        color: Colors.white,
                         size: 30,
                       ),
                       text: widget.documentSnapshot['make'].toString(),
@@ -129,6 +121,7 @@ class _CarDetailState extends State<CarDetail> {
                     CustomSpecs(
                       icon: const Icon(
                         CupertinoIcons.car,
+                        color: Colors.white,
                         size: 30,
                       ),
                       text: widget.documentSnapshot['model'].toString(),
@@ -139,6 +132,7 @@ class _CarDetailState extends State<CarDetail> {
                     CustomSpecs(
                       icon: const Icon(
                         CupertinoIcons.timer_fill,
+                        color: Colors.white,
                         size: 30,
                       ),
                       text: widget.documentSnapshot['modelyear'].toString(),
@@ -149,6 +143,7 @@ class _CarDetailState extends State<CarDetail> {
                     CustomSpecs(
                       icon: const Icon(
                         CupertinoIcons.gear_alt,
+                        color: Colors.white,
                         size: 30,
                       ),
                       text: widget.documentSnapshot['transmission'].toString(),
@@ -159,6 +154,7 @@ class _CarDetailState extends State<CarDetail> {
                     CustomSpecs(
                       icon: const Icon(
                         Icons.car_repair,
+                        color: Colors.white,
                         size: 30,
                       ),
                       text: widget.documentSnapshot['category'].toString(),
@@ -177,7 +173,7 @@ class _CarDetailState extends State<CarDetail> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   const Text(
-                    'Booking Days : ',
+                    'Price Per day: ',
                     style: TextStyle(
                         fontSize: 19,
                         fontWeight: FontWeight.bold,
@@ -187,67 +183,26 @@ class _CarDetailState extends State<CarDetail> {
                         textBaseline: TextBaseline.alphabetic),
                   ),
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      Container(
-                        height: 30,
-                        width: 30,
-                        decoration: const BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Colors.blueGrey,
-                        ),
-                        child: InkWell(
-                          onTap: () {
-                            if (bookingdays == 0) {
-                              bookingdays == 0;
-                              setState(() {});
-                            } else {
-                              bookingdays--;
-                              setState(() {});
-                            }
-                          },
-                          child: const Center(
-                              child: Text(
-                            '-',
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 19,
-                                fontWeight: FontWeight.bold),
-                          )),
-                        ),
-                      ),
-                      SizedBox(
-                        width: MediaQuery.of(context).size.width * 0.02,
-                      ),
                       Text(
-                        '$bookingdays',
-                        style: TextStyle(height: 1),
+                        widget.documentSnapshot['price'].toString(),
+                        style: const TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.bold),
                       ),
-                      SizedBox(
-                        width: MediaQuery.of(context).size.width * 0.02,
+                      const Text(
+                        ' Rs',
+                        style: TextStyle(
+                            color: Colors.indigo,
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold),
                       ),
-                      Container(
-                        height: 30,
-                        width: 30,
-                        decoration: const BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Colors.indigo,
-                        ),
-                        child: InkWell(
-                          onTap: () {
-                            bookingdays++;
-                            setState(() {});
-                          },
-                          child: const Center(
-                              child: Text(
-                            '+',
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 17,
-                                fontWeight: FontWeight.bold),
-                          )),
-                        ),
-                      ),
+                      const Text(
+                        '  /day',
+                        style: TextStyle(
+                            color: Colors.indigo,
+                            fontSize: 17,
+                            fontWeight: FontWeight.bold),
+                      )
                     ],
                   )
                 ],
@@ -258,107 +213,35 @@ class _CarDetailState extends State<CarDetail> {
             ),
             Padding(
               padding: EdgeInsets.symmetric(
-                  vertical: MediaQuery.of(context).size.height * 0.01,
-                  horizontal: MediaQuery.of(context).size.height * 0.01),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.09,
-                      child: Center(
-                        child: Padding(
-                          padding: EdgeInsets.only(
-                              left: MediaQuery.of(context).size.width * 0.02),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              const Text(
-                                'Rs ',
-                                style: TextStyle(
-                                    fontSize: 19, fontWeight: FontWeight.bold),
-                              ),
-                              Text(
-                                widget.documentSnapshot['price'].toString(),
-                                style: const TextStyle(
-                                    fontSize: 19, fontWeight: FontWeight.bold),
-                              ),
-                              const Text(
-                                ' /day',
-                                style: TextStyle(
-                                    color: Colors.indigo,
-                                    fontSize: 19,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                            ],
-                          ),
-                        ),
-                      )),
-                  InkWell(
-                    onTap: () {
-                      final firestore =
-                          FirebaseFirestore.instance.collection('BookedCars');
-                      final carId = widget.documentSnapshot['id'];
-                      final qurey = firestore
-                          .where('car id', isEqualTo: carId)
-                          .where('uid', isEqualTo: auth.currentUser!.uid);
-                      qurey.get().then((snapshot) {
-                        if (snapshot.docs.isNotEmpty) {
-                          CustomToast()
-                              .Toastt('This Car is Already Booked by you');
-                        } else if (bookingdays == 0) {
-                          CustomToast()
-                              .Toastt('Please Select the booking days');
-                        } else {
-                          String pricestring =
-                              widget.documentSnapshot['price'].toString();
-                          int price = int.parse(pricestring);
-                          int totalprice = bookingdays * price;
-                          String bookedID =
-                              DateTime.now().millisecondsSinceEpoch.toString();
-                          firestore.doc(bookedID).set({
-                            'carname':
-                                widget.documentSnapshot['make'].toString(),
-                            'uid': auth.currentUser!.uid,
-                            'image':
-                                widget.documentSnapshot['image'].toString(),
-                            'model':
-                                widget.documentSnapshot['model'].toString(),
-                            'price per day':
-                                widget.documentSnapshot['price'].toString(),
-                            'car id': carId,
-                            'totalbill': totalprice.toString(),
-                            'bookedId': bookedID
-                          }).then((value) {
-
-                          }).onError((error, stackTrace) {
-                            CustomToast().Toastt(error.toString());
-                          });
-                        }
-                      }).onError((error, stackTrace) {
-                        CustomToast().Toastt(error.toString());
-                      });
-                    },
-                    child: Container(
-                      height: MediaQuery.of(context).size.height * 0.09,
-                      width: MediaQuery.of(context).size.width * 0.47,
-                      decoration: BoxDecoration(
-                          color: Colors.indigo,
-                          borderRadius: BorderRadius.circular(20)),
-                      child: const Center(
-                        child: Text(
-                          'Book now',
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 19),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
+                  horizontal: MediaQuery.of(context).size.width * 0.03),
+              child: InkWell(
+                onTap: () {
+                  final DocumentSnapshot documentsnapshot;
+                  documentsnapshot = widget.documentSnapshot;
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            BookingDetails(documentSnapshot: documentsnapshot),
+                      ));
+                },
+                child: Container(
+                  height: MediaQuery.of(context).size.height * 0.08,
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                      color: Colors.indigo,
+                      borderRadius: BorderRadius.circular(20)),
+                  child: const Center(
+                      child: Text(
+                    'Book Now',
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold),
+                  )),
+                ),
               ),
-            ),
+            )
           ],
         ),
       ),
